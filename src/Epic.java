@@ -5,32 +5,53 @@ public class Epic extends Task {
 
     public Epic(String name, String description, Status status) {
         super(name, description, status);
-        this.subtasks = subtasks;
-    }
-
-    public void setSubtasks(ArrayList<Subtask> subtasks) {
-        this.subtasks = subtasks;
+        setStatus(Status.NEW);
+        this.subtasks = new ArrayList<>();
     }
 
     public ArrayList<Subtask> getSubtasks() {
-        return subtasks;
+        return new ArrayList<>();
     }
 
     public Status getStatusByTasks(Epic epic) {
+        Status epicStatus = epic.getStatus();
+        if (subtasks.isEmpty()) {
+            epicStatus = Status.NEW;
+            return epicStatus;
+        }
+        boolean allSubtasksDone = true;
+        boolean anyOfSubtasksInProgress = false;
         for (Subtask subtask : subtasks) {
             Status subtaskStatus = subtask.getStatus();
-            if (subtaskStatus == Status.NEW || subtaskStatus == Status.IN_PROGRESS){
-                return Status.IN_PROGRESS;
-            } else {
-                return Status.DONE;
+            if (subtaskStatus != Status.DONE) {
+                allSubtasksDone = false;
+            } else if (subtaskStatus == Status.IN_PROGRESS) {
+                anyOfSubtasksInProgress = true;
             }
         }
-        return epic.getStatus();// статус текущего эпика в зависимости от статуса списка подзадач
+        if (allSubtasksDone) {
+            epicStatus = Status.DONE;
+        } else if (anyOfSubtasksInProgress) {
+            epicStatus = Status.IN_PROGRESS;
+        } else {
+            epicStatus = Status.NEW;
+        }
+        return epicStatus;
+        }
+       // статус текущего эпика в зависимости от статуса списка подзадач
 
-    }
+
 
     public void addSubtask(Subtask subtask){
         subtasks.add(subtask);
+    }
+
+    public void deleteSubtask (Subtask subtask){
+        subtasks.remove(subtask);
+    }
+
+    public void deleteAllSubtasks (){
+        subtasks.clear();
     }
 
 }

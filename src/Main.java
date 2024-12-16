@@ -8,13 +8,16 @@ public class Main {
          Task newTask = taskManager.createTask(task);
          Integer createdTaskId = newTask.getId();
          Task updatedTask = new Task ("Сдел ТЗ", "Кодить", Status.NEW);
-         updatedTask = taskManager.updateTask(updatedTask);
+         if (taskManager.updateTask(updatedTask)) {
+              System.out.println("задача обновлена");
+         }
          System.out.println(taskManager.getAllTasks());
          Epic epic1 = new Epic("", "", Status.NEW);
          Epic newEpic1 = taskManager.createEpic(epic1);
-         Epic updatedEpic1 = new Epic ("r","g", Status.IN_PROGRESS);
-         updatedEpic1 = taskManager.updateEpic(updatedEpic1);
-
+         Epic updatedEpic1 = new Epic ("r","g", Status.DONE);
+         if (taskManager.updateTask(updatedEpic1)) {
+              System.out.println("эпик обновлен");
+         }
          Subtask subtask = new Subtask("","",Status.NEW, 4);
 
 
