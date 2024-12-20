@@ -12,9 +12,9 @@ public class Main {
               System.out.println("задача обновлена");
          }
          System.out.println(taskManager.getAllTasks());
-         Epic epic1 = new Epic("", "", Status.NEW);
+         Epic epic1 = new Epic("", "");
          Epic newEpic1 = taskManager.createEpic(epic1);
-         Epic updatedEpic1 = new Epic ("r","g", Status.DONE);
+         Epic updatedEpic1 = new Epic ("r","g");
          if (taskManager.updateTask(updatedEpic1)) {
               System.out.println("эпик обновлен");
          }

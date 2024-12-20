@@ -3,21 +3,20 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
 
-    public Epic(String name, String description, Status status) {
-        super(name, description, status);
-        setStatus(Status.NEW);
+    public Epic(String name, String description) {
+        super(name, description, Status.NEW);
         this.subtasks = new ArrayList<>();
     }
 
     public ArrayList<Subtask> getSubtasks() {
-        return new ArrayList<>();
+        return new ArrayList<>(subtasks);
     }
 
-    public Status getStatusByTasks(Epic epic) {
+    public void updateStatusByTasks(Epic epic) {
         Status epicStatus = epic.getStatus();
         if (subtasks.isEmpty()) {
             epicStatus = Status.NEW;
-            return epicStatus;
+            epic.setStatus(epicStatus);
         }
         boolean allSubtasksDone = true;
         boolean anyOfSubtasksInProgress = false;
@@ -36,7 +35,7 @@ public class Epic extends Task {
         } else {
             epicStatus = Status.NEW;
         }
-        return epicStatus;
+       epic.setStatus(epicStatus);
         }
        // статус текущего эпика в зависимости от статуса списка подзадач
 
