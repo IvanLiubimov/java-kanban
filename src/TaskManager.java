@@ -98,7 +98,7 @@ public class TaskManager {
 
     public ArrayList<Subtask> getSubtaskByEpic (int epicId) {
         Epic epic = epics.get(epicId);
-        if (epic == null) {
+        if (epic != null) {
             ArrayList<Subtask> allEpicSubtasks = epic.getSubtasks();
             return allEpicSubtasks;
         }
@@ -113,7 +113,7 @@ public class TaskManager {
             newSubtask.setId(newId);//
             Epic existingEpic = epics.get(newSubtask.getEpicId());
             existingEpic.addSubtask(newSubtask); //добавляем сабтаск в лист эпика
-            existingEpic.updateStatusByTasks(existingEpic);
+            existingEpic.updateStatusByTasks();
             return subtasks.put(newId, newSubtask);
         }
         return null;
@@ -124,11 +124,10 @@ public class TaskManager {
             Subtask existingSubtask = subtasks.get(subtask.getId());
             if (existingSubtask.getEpicId().equals(subtask.getEpicId())) {
                 Epic existingEpic = epics.get(existingSubtask.getEpicId());
-                ArrayList<Subtask> subtasksOfEpic = existingEpic.getSubtasks();
                 existingEpic.deleteSubtask(existingSubtask);
-                subtasksOfEpic.add(subtask);
+                existingEpic.addSubtask(subtask);
                 subtasks.put(subtask.getId(), subtask);
-                existingEpic.updateStatusByTasks(existingEpic);
+                existingEpic.updateStatusByTasks();
             }
             return true;
         }
@@ -141,7 +140,7 @@ public class TaskManager {
             subtasks.remove(id);
             Epic epic = epics.get(subtask.getEpicId());
             epic.deleteSubtask(subtask);
-            epic.updateStatusByTasks(epic);
+            epic.updateStatusByTasks();
         }
         }
 
@@ -155,7 +154,8 @@ public class TaskManager {
     public void deteteAllSubtusks() {
         subtasks.clear();
         for (Epic epic : epics.values()) {
-            epic.updateStatusByTasks(epic);
+            epic.deleteAllSubtasks();
+            epic.updateStatusByTasks();
         }
     }
 

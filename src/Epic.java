@@ -12,11 +12,11 @@ public class Epic extends Task {
         return new ArrayList<>(subtasks);
     }
 
-    public void updateStatusByTasks(Epic epic) {
-        Status epicStatus = epic.getStatus();
+    public void updateStatusByTasks() {
+        Status epicStatus;
         if (subtasks.isEmpty()) {
             epicStatus = Status.NEW;
-            epic.setStatus(epicStatus);
+            this.setStatus(epicStatus);
         }
         boolean allSubtasksDone = true;
         boolean anyOfSubtasksInProgress = false;
@@ -35,7 +35,7 @@ public class Epic extends Task {
         } else {
             epicStatus = Status.NEW;
         }
-       epic.setStatus(epicStatus);
+       this.setStatus(epicStatus);
         }
        // статус текущего эпика в зависимости от статуса списка подзадач
 
