@@ -10,4 +10,17 @@ public class Subtask extends Task{
         super(name, description, status);
         this.epicId = epicId;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Subtask subtask = (Subtask) obj;
+        return epicId.equals(subtask.epicId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(epicId);
+    }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
@@ -53,4 +54,25 @@ public class Epic extends Task {
         subtasks.clear();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Epic epic = (Epic) obj;
+        return Objects.equals(subtasks, epic.getSubtasks());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        if (subtasks != null) {
+            hash = hash + subtasks.hashCode();
+        }
+        hash = hash * 31;
+
+        if (subtasks != null) {
+            hash = hash + subtasks.hashCode();
+        }
+        return hash;
+    }
 }

@@ -1,9 +1,7 @@
-import java.util.ArrayList;
-
 public class Main {
 
     public static void main(String[] args) {
-         TaskManager taskManager = new TaskManager();
+         TaskManager taskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
          Task task = new Task("Сделать ТЗ ", "Написать код", Status.NEW);
          Task newTask = taskManager.createTask(task);
          Integer createdTaskId = newTask.getId();
