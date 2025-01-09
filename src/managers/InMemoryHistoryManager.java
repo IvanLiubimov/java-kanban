@@ -1,3 +1,7 @@
+package managers;
+
+import task.Task;
+
 import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -8,7 +12,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void addToSeenTasks(Task seenTask) {
         if (seenTasks.size() >= 10) {
             seenTasks.remove(0);
-            seenTasks.add(seenTask);
         }
         seenTasks.add(seenTask);
 
@@ -16,7 +19,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public ArrayList<Task> getSeenTasks() {
-        return seenTasks;
+        return new ArrayList<>();
     }
 
 }

@@ -1,9 +1,16 @@
+import managers.HistoryManager;
+import managers.InMemoryHistoryManager;
+import managers.Managers;
+import managers.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import task.Epic;
+import task.Status;
+import task.Subtask;
+import task.Task;
 
-import java.io.EOFException;
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -158,11 +165,11 @@ class InMemoryTaskManagerTest {
 
         taskManager.createTask(task);
         taskManager.findTaskById(task.getId());
-        Task seenTaskBeforeUpdate = taskManager.getSeenTasks().get(0);
+        Task seenTaskBeforeUpdate = taskManager.getHistory().get(0);
         String nameOfSeenTask = seenTaskBeforeUpdate.getName();
         task.setName("ДЗ");
         taskManager.updateTask(task);
-        Task seenTaskAfterUpdate = taskManager.getSeenTasks().get(0);
+        Task seenTaskAfterUpdate = taskManager.getHistory().get(0);
 
         Assertions.assertEquals(nameOfSeenTask, seenTaskAfterUpdate.getName());
 
@@ -179,7 +186,7 @@ class InMemoryTaskManagerTest {
         Epic epicToSeen = taskManager.createEpic(epic);
 
         taskManager.findEpicById(epicToSeen.getId());
-        ArrayList<Task> historyList = history.getSeenTasks();
+        List<Task> historyList = history.getSeenTasks();
         System.out.println(historyList);
 
         assertTrue(historyList.contains(epicToSeen));

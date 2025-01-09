@@ -1,7 +1,14 @@
+import managers.InMemoryTaskManager;
+import managers.TaskManager;
+import task.Epic;
+import task.Status;
+import task.Subtask;
+import task.Task;
+
 public class Main {
 
     public static void main(String[] args) {
-         TaskManager taskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+         TaskManager taskManager = new InMemoryTaskManager();
          Task task = new Task("Сделать ТЗ ", "Написать код", Status.NEW);
          Task newTask = taskManager.createTask(task);
          Integer createdTaskId = newTask.getId();

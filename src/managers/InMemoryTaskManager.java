@@ -1,20 +1,32 @@
+package managers;
+
+import task.Epic;
+import task.Subtask;
+import task.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap <Integer, Task> tasks;
-    private HashMap <Integer, Epic> epics;
-    private HashMap <Integer, Subtask> subtasks;
+    private Map<Integer, Task> tasks;
+    private Map <Integer, Epic> epics;
+    private Map <Integer, Subtask> subtasks;
     private int idCounter = 0;
     private HistoryManager historyManager;
 
 
 
-    public InMemoryTaskManager(HistoryManager historyManager) {
+    public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
-        this.historyManager = historyManager;
+        this.historyManager = Managers.getDefaultHistory();
+    }
+
+    @Override
+    public ArrayList<Task> getHistory() {
+        return new ArrayList<>(historyManager.getSeenTasks());
     }
 
     @Override
@@ -57,10 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
         return tasks.get(id);
     }
 
-    @Override
-    public ArrayList<Task> getSeenTasks() {
-        return new ArrayList<>(historyManager.getSeenTasks());
-    }
+
 
 
 
