@@ -11,6 +11,7 @@ import task.Subtask;
 import task.Task;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -186,10 +187,10 @@ class InMemoryTaskManagerTest {
         Epic epicToSeen = taskManager.createEpic(epic);
 
         taskManager.findEpicById(epicToSeen.getId());
-        List<Task> historyList = history.getSeenTasks();
+        Map<Integer, InMemoryHistoryManager.Node> historyList = history.getSeenTasks();
         System.out.println(historyList);
 
-        assertTrue(historyList.contains(epicToSeen));
+        assertTrue(historyList.containsKey(epicToSeen.getId()));
 
     }
 }
