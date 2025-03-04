@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks;
-    private Map <Integer, Epic> epics;
-    private Map <Integer, Subtask> subtasks;
+    private Map<Integer, Epic> epics;
+    private Map<Integer, Subtask> subtasks;
     private int idCounter = 0;
     private HistoryManager historyManager;
 
@@ -37,9 +37,10 @@ public class InMemoryTaskManager implements TaskManager {
         return newTask;
 
     }
+
     @Override
     public boolean updateTask(Task task) {
-        if (tasks.containsKey(task.getId())){
+        if (tasks.containsKey(task.getId())) {
             Task existingTask = tasks.get(task.getId());
             existingTask.setName(task.getName());
             existingTask.setDescription(task.getDescription());
@@ -78,11 +79,12 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
     }
 //////////////////////////
+
 @Override
 public Epic createEpic(Epic newEpic) {
         int newId = idGenerator();
         newEpic.setId(newId);
-        epics.put (newEpic.getId(), newEpic);
+        epics.put(newEpic.getId(), newEpic);
         return newEpic;
 
     }
@@ -91,7 +93,7 @@ public Epic createEpic(Epic newEpic) {
     public Epic deleteEpicById(Integer id) { // 1) есть ли айди 2) залезай в талицу сабтасков и удаляй сабтаски
         if (epics.containsKey(id)) {
             Epic existingEpic = epics.get(id);
-            ArrayList <Subtask> epicSubtasks = existingEpic.getSubtasks();
+            ArrayList<Subtask> epicSubtasks = existingEpic.getSubtasks();
             for (Subtask subtask : epicSubtasks) {
                 Integer idToDelete = subtask.getId();
                 subtasks.remove(idToDelete);
@@ -210,7 +212,7 @@ public Subtask createSubtask(Subtask newSubtask) {
         return subtasks.get(id);
     }
 
-    private int idGenerator(){
+    private int idGenerator() {
         return idCounter++;
     }
 
