@@ -44,20 +44,20 @@ public class Epic extends Task {
 
 
 
-    public void addSubtask(Subtask subtask){
+    public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
     }
 
-    public void deleteSubtask (Subtask subtask){
+    public void deleteSubtask(Subtask subtask) {
         subtasks.remove(subtask);
     }
 
-    public void deleteAllSubtasks (){
+    public void deleteAllSubtasks() {
         subtasks.clear();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals (Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Epic epic = (Epic) obj;
