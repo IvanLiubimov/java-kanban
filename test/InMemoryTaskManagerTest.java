@@ -187,10 +187,10 @@ class InMemoryTaskManagerTest {
         Epic epicToSeen = taskManager.createEpic(epic);
 
         taskManager.findEpicById(epicToSeen.getId());
-        Map<Integer, InMemoryHistoryManager.Node> historyList = history.getSeenTasks();
+        List <Task >historyList = history.getSeenTasks();
         System.out.println(historyList);
 
-        assertTrue(historyList.containsKey(epicToSeen.getId()));
+        assertTrue(historyList.contains(epicToSeen));
 
     }
 }
