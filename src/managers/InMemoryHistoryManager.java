@@ -3,7 +3,6 @@ package managers;
 import task.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -44,7 +43,8 @@ public class InMemoryHistoryManager implements HistoryManager {
             first = new Node(null, null, seenTask);
             idToNode.put(seenTask.getId(), first);
             return;
-        } if (last == null) {
+        }
+        if (last == null) {
             last = new Node(null, first, seenTask);
             idToNode.put(seenTask.getId(), last);
             return;
@@ -73,7 +73,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         private Node previous;
         private Task task;
 
-        public Node(){}
+        public Node() {
+
+        }
 
         public Node(Node next, Node previous, Task task) {
             this.next = next;
