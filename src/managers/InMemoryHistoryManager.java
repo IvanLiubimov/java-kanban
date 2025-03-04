@@ -3,13 +3,14 @@ package managers;
 import task.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     ArrayList<Task> listOfSeenTasks = new ArrayList<>();
     Node first;
     Node last;
-    private Map<Integer, Node> idToNode;
+    private Map<Integer, Node> idToNode = new HashMap<>();
 
     public void removeNode(int id) {
         Node node = idToNode.get(id);
