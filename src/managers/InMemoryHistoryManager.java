@@ -42,7 +42,7 @@ public class InMemoryHistoryManager implements HistoryManager {
            }
         if (first == null) {
             first = new Node(null, null, seenTask);
-            System.out.println("ID: " + seenTask.getId());
+            //System.out.println("ID: " + seenTask.getId());
             idToNode.put(seenTask.getId(), first);
             return;
         }

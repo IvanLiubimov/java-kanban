@@ -28,15 +28,16 @@ class InMemoryTaskManagerTest {
     void createTask() {
         String name = "Сделать ДЗ";
         String description = "Спринт 5";
-        Task task = new Task (name, description, Status.NEW);
+        Task task = new Task(name, description, Status.NEW);
 
         taskManager.createTask(task);
 
         Task actualCreatedTask = taskManager.findTaskById(task.getId());
-        Assertions.assertNotNull(actualCreatedTask.getId());
-        Assertions.assertEquals(actualCreatedTask.getDescription(), description);
-        Assertions.assertEquals(actualCreatedTask.getName(), name);
-        Assertions.assertEquals(actualCreatedTask.getStatus(), Status.NEW);
+
+        Assertions.assertTrue(actualCreatedTask.getId() > 0, "ID должен быть положительным");
+        Assertions.assertEquals(description, actualCreatedTask.getDescription());
+        Assertions.assertEquals(name, actualCreatedTask.getName());
+        Assertions.assertEquals(Status.NEW, actualCreatedTask.getStatus());
     }
 
     @Test
