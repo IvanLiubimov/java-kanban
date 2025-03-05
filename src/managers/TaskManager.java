@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface TaskManager {
 
-    List<Task> getHistory ();
+    List<Task> getHistory();
+
+    HistoryManager getHistoryManager();
 
     Task createTask(Task newTask);
 
