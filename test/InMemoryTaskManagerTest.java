@@ -101,6 +101,8 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(createdTask,createdEpic);
 
     }
+
+
     @Test
     void classManagersShouldReturnReadyManager (){
         String name = "Сделать ДЗ";
@@ -182,11 +184,11 @@ class InMemoryTaskManagerTest {
         String name = "Сделать ДЗ";
         String description = "Спринт 5";
         Epic epic = new Epic (name, description);
-        HistoryManager history = new InMemoryHistoryManager();
+        HistoryManager history =taskManager.getHistoryManager();
         Epic epicToSeen = taskManager.createEpic(epic);
 
         taskManager.findEpicById(epicToSeen.getId());
-        List <Task >historyList = history.getSeenTasks();
+        List <Task>historyList = history.getSeenTasks();
         System.out.println(historyList);
 
         assertTrue(historyList.contains(epicToSeen));

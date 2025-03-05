@@ -10,6 +10,8 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
+    HistoryManager getHistoryManager();
+
     Task createTask(Task newTask);
 
     boolean updateTask(Task task);

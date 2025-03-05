@@ -125,6 +125,7 @@ public Epic createEpic(Epic newEpic) {
     public Epic findEpicById(Integer id) {
         Epic epic = epics.get(id);
         Task seenEpic = new Epic(epic.getName(), epic.getDescription());
+        seenEpic.setId(epic.getId());
         historyManager.addToSeenTasks(seenEpic);
         return epics.get(id);
     }
@@ -155,7 +156,8 @@ public Subtask createSubtask(Subtask newSubtask) {
             Epic existingEpic = epics.get(newSubtask.getEpicId());
             existingEpic.addSubtask(newSubtask); //добавляем сабтаск в лист эпика
             existingEpic.updateStatusByTasks();
-            return subtasks.put(newId, newSubtask);
+            subtasks.put(newSubtask.getId(), newSubtask);
+            return newSubtask;
         }
         return null;
     }
@@ -213,11 +215,16 @@ public Subtask createSubtask(Subtask newSubtask) {
     }
 
     private int idGenerator() {
-        return idCounter++;
+        return idCounter = idCounter + 1;
     }
 
     public boolean isIdConflict(int id) {
         return tasks.containsKey(id);
+    }
+
+    @Override
+    public HistoryManager getHistoryManager() {
+        return this.historyManager;
     }
 
 }

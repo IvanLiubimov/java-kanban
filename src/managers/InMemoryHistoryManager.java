@@ -42,11 +42,13 @@ public class InMemoryHistoryManager implements HistoryManager {
            }
         if (first == null) {
             first = new Node(null, null, seenTask);
+            System.out.println("ID: " + seenTask.getId());
             idToNode.put(seenTask.getId(), first);
             return;
         }
         if (last == null) {
             last = new Node(null, first, seenTask);
+            first.next = last;
             idToNode.put(seenTask.getId(), last);
             return;
         }
