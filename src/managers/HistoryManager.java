@@ -8,4 +8,6 @@ public interface HistoryManager {
     void addToSeenTasks(Task task);
 
     List<Task> getSeenTasks();
+
+    void removeNode(int id);
 }

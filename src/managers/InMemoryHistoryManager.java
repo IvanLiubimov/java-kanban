@@ -37,31 +37,27 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void addToSeenTasks(Task seenTask) {
         if (idToNode.containsKey(seenTask.getId())) {
-            Node seenNode = idToNode.get(seenTask.getId());
             removeNode(seenTask.getId());
            }
         if (first == null) {
-            first = new Node(null, null, seenTask);
-            //System.out.println("ID: " + seenTask.getId());
+            Node firstNode = new Node(null, null, seenTask);
+            first = firstNode;
+            last = firstNode;
             idToNode.put(seenTask.getId(), first);
-            return;
+        } else {
+            Node newLast = new Node(null, last, seenTask); //любая новая нода у которой prev. = last
+            last.next = newLast; // Присваиваем бывшей последней ноде новый след. элемент
+            last = newLast; //заменяем последнюю ноду новой последней нодой
+            idToNode.put(seenTask.getId(), newLast); // сохрняем новую ноду
         }
-        if (last == null) {
-            last = new Node(null, first, seenTask);
-            first.next = last;
-            idToNode.put(seenTask.getId(), last);
-            return;
-        }
-        Node newLast = new Node(null, last, seenTask); //новая нода
-        last.next = newLast; // Присваиваем бывшей последней ноде новый след. элемент
-        last = newLast; //заменяем последнюю ноду новой последней нодой
-        idToNode.put(seenTask.getId(), newLast); // сохрняем новую ноду
-
     }
 
-    public void updateListOfSeenTasks() {
-        for (Node node : idToNode.values()) {
-            listOfSeenTasks.add(node.task);
+    private void updateListOfSeenTasks() {
+        listOfSeenTasks.clear();
+        Node current = first;
+        while (current != null) {
+            listOfSeenTasks.add(current.task);
+            current = current.next;
         }
     }
 

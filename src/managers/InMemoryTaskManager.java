@@ -53,6 +53,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task deleteTaskById(Integer id) {
+        historyManager.removeNode(id);
         return tasks.remove(id);
     }
 
@@ -70,12 +71,11 @@ public class InMemoryTaskManager implements TaskManager {
         return tasks.get(id);
     }
 
-
-
-
-
     @Override
     public void deleteAllTasks() {
+        for (Integer taskId : tasks.keySet()) {
+            historyManager.removeNode(taskId);
+        }
         tasks.clear();
     }
 //////////////////////////
@@ -96,8 +96,10 @@ public Epic createEpic(Epic newEpic) {
             ArrayList<Subtask> epicSubtasks = existingEpic.getSubtasks();
             for (Subtask subtask : epicSubtasks) {
                 Integer idToDelete = subtask.getId();
+                historyManager.removeNode(idToDelete);
                 subtasks.remove(idToDelete);
-            }
+                }
+            historyManager.removeNode(id);
             return epics.remove(id);
         }
         return null;
@@ -126,12 +128,21 @@ public Epic createEpic(Epic newEpic) {
         Epic epic = epics.get(id);
         Task seenEpic = new Epic(epic.getName(), epic.getDescription());
         seenEpic.setId(epic.getId());
+        seenEpic.setStatus(epic.getStatus());
         historyManager.addToSeenTasks(seenEpic);
         return epics.get(id);
     }
 
     @Override
     public void deleteAllEpics() {
+        for (Integer subtaskId : subtasks.keySet()) {
+            historyManager.removeNode(subtaskId);
+        }
+        for (Integer epicId : epics.keySet()) {
+            historyManager.removeNode(epicId);
+        }
+
+
         subtasks.clear();
         epics.clear();
     }
@@ -183,6 +194,7 @@ public Subtask createSubtask(Subtask newSubtask) {
         Subtask subtask = subtasks.get(id);
         if (epics.containsKey(subtask.getEpicId())) {
             subtasks.remove(id);
+            historyManager.removeNode(id);
             Epic epic = epics.get(subtask.getEpicId());
             epic.deleteSubtask(subtask);
             epic.updateStatusByTasks();
@@ -193,6 +205,9 @@ public Subtask createSubtask(Subtask newSubtask) {
 
     @Override
     public ArrayList<Subtask> getAllSubtasks() {
+        for (Integer subtaskId : subtasks.keySet()) {
+            historyManager.removeNode(subtaskId);
+        }
         return new ArrayList<>(subtasks.values());
 
     }
@@ -220,11 +235,6 @@ public Subtask createSubtask(Subtask newSubtask) {
 
     public boolean isIdConflict(int id) {
         return tasks.containsKey(id);
-    }
-
-    @Override
-    public HistoryManager getHistoryManager() {
-        return this.historyManager;
     }
 
 }

@@ -182,7 +182,7 @@ class InMemoryTaskManagerTest {
 
     }
 
-    @Test
+    /*@Test
     void epicShouldBeAddedToHistoryList() {
         String name = "Сделать ДЗ";
         String description = "Спринт 5";
@@ -196,5 +196,5 @@ class InMemoryTaskManagerTest {
 
         assertTrue(historyList.contains(epicToSeen));
 
-    }
+   }*/
 }

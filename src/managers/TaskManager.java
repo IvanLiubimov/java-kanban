@@ -10,8 +10,6 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-    HistoryManager getHistoryManager();
-
     Task createTask(Task newTask);
 
     boolean updateTask(Task task);
@@ -23,6 +21,7 @@ public interface TaskManager {
     Task findTaskById(Integer id);
 
     void deleteAllTasks();
+
 
     //////////////////////////
     Epic createEpic(Epic newEpic);
