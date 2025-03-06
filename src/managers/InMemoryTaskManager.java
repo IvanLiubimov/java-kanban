@@ -216,6 +216,9 @@ public Subtask createSubtask(Subtask newSubtask) {
     public void deteteAllSubtusks() {
         subtasks.clear();
         for (Epic epic : epics.values()) {
+            for (Integer subtaskId : subtasks.keySet()) {
+                historyManager.removeNode(subtaskId);
+            }
             epic.deleteAllSubtasks();
             epic.updateStatusByTasks();
         }
