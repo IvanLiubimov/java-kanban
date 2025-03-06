@@ -44,15 +44,15 @@ public class Epic extends Task {
 
 
 
-    public void addSubtask(Subtask subtask){
+    public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
     }
 
-    public void deleteSubtask (Subtask subtask){
+    public void deleteSubtask(Subtask subtask) {
         subtasks.remove(subtask);
     }
 
-    public void deleteAllSubtasks (){
+    public void deleteAllSubtasks() {
         subtasks.clear();
     }
 
