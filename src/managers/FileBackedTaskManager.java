@@ -7,7 +7,6 @@ import task.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -72,14 +71,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Subtask createSubtask(Subtask newSubtask) {
-        Subtask createdSubtask =super.createSubtask(newSubtask);
+        Subtask createdSubtask = super.createSubtask(newSubtask);
         save();
         return createdSubtask;
     }
 
     @Override
     public boolean updateSubtask(Subtask subtask) {
-        boolean updatedSubtask= super.updateSubtask(subtask);
+        boolean updatedSubtask = super.updateSubtask(subtask);
         if (updatedSubtask) {
             save();
         }
@@ -124,7 +123,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     private void writeStringToFile(String taskAsString) {
-        try (FileWriter fileWriter = new FileWriter(data)){
+        try (FileWriter fileWriter = new FileWriter(data)) {
             fileWriter.write(taskAsString);
             fileWriter.write(System.lineSeparator());
 
@@ -140,7 +139,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file, new InMemoryHistoryManager());
             List<String> allFileContent = Files.readAllLines(file.toPath());
-            for (String line : allFileContent){
+            for (String line : allFileContent) {
                  Task task = fileBackedTaskManager.fromString(line);
                  int maxId = 0;
                  if (maxId < task.getId()) {
@@ -153,7 +152,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 } else {
                     fileBackedTaskManager.tasks.put(task.getId(), task);
                 }
-                fileBackedTaskManager.setIdCounter(maxId+1);
+                fileBackedTaskManager.setIdCounter(maxId + 1);
             }
             return fileBackedTaskManager;
         } catch (IOException e) {
@@ -163,8 +162,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public Task fromString (String line) {
-        String partsOfLine[] = line.split(",");
+    public Task fromString(String line) {
+        String[] partsOfLine = line.split(",");
 
         int id = Integer.parseInt(partsOfLine[0]);
         TaskTypes type = TaskTypes.valueOf(partsOfLine[1]);
