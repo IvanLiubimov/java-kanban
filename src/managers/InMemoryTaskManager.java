@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private Map<Integer, Task> tasks;
-    private Map<Integer, Epic> epics;
-    private Map<Integer, Subtask> subtasks;
-    private int idCounter = 0;
+    protected Map<Integer, Task> tasks;
+    protected Map<Integer, Epic> epics;
+    protected Map<Integer, Subtask> subtasks;
+    protected int idCounter = 0;
     private HistoryManager historyManager;
 
 
@@ -27,6 +27,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Task> getHistory() {
         return new ArrayList<>(historyManager.getSeenTasks());
+    }
+
+    public void setIdCounter(int idCounter) {
+        this.idCounter = idCounter;
+    }
+
+    public int getIdCounter() {
+        return idCounter;
     }
 
     @Override

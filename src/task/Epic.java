@@ -6,6 +6,11 @@ import java.util.Objects;
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
         this.subtasks = new ArrayList<>();
@@ -57,6 +62,11 @@ public class Epic extends Task {
     }
 
     @Override
+    public String getType() {
+        return "EPIC";
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -77,4 +87,6 @@ public class Epic extends Task {
         }
         return hash;
     }
+
+
 }

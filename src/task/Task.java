@@ -46,6 +46,10 @@ public class Task {
         return status;
     }
 
+    public String getType() {
+        return "TASK";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,9 +64,8 @@ public class Task {
         return Objects.hash(id);
     }
 
-
-
-
-
-
+    @Override
+    public String toString() {
+        return id + "," + getType() + ","+ name + "," + description + "," + status + ",";
+    }
 }
