@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, FileManagerFileRecoveryException {
 
-         File file= File.createTempFile("backup", ".csv");
+         File file = File.createTempFile("backup", ".csv");
          FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file, new InMemoryHistoryManager());
 
 
