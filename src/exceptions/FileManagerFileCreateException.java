@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 public class FileManagerFileCreateException extends RuntimeException {
     public FileManagerFileCreateException(String message) {
