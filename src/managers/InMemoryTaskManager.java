@@ -29,7 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(historyManager.getSeenTasks());
     }
 
-    public void setIdCounter(int idCounter) {
+    protected void setIdCounter(int idCounter) {
         this.idCounter = idCounter;
     }
 
@@ -213,9 +213,6 @@ public Subtask createSubtask(Subtask newSubtask) {
 
     @Override
     public ArrayList<Subtask> getAllSubtasks() {
-        for (Integer subtaskId : subtasks.keySet()) {
-            historyManager.removeNode(subtaskId);
-        }
         return new ArrayList<>(subtasks.values());
 
     }
