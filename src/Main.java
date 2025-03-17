@@ -1,4 +1,4 @@
-import exceptions.FileManagerFileRecoveryException;
+import exceptions.FileManagerRecoveryException;
 import managers.FileBackedTaskManager;
 import managers.InMemoryTaskManager;
 import managers.TaskManager;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, FileManagerFileRecoveryException {
+    public static void main(String[] args) throws IOException, FileManagerRecoveryException {
 
          File file = File.createTempFile("backup", ".csv");
          FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);

@@ -1,7 +1,7 @@
 package managers;
 
-import exceptions.FileManagerFileRecoveryException;
-import exceptions.FileManagerFileSaveException;
+import exceptions.FileManagerRecoveryException;
+import exceptions.FileManagerSaveException;
 import task.*;
 
 import java.io.File;
@@ -129,12 +129,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException e) {
             String error = "Не удаётся сохранить данные" + e.getMessage();
             System.out.println(error);
-            throw new FileManagerFileSaveException(error);
+            throw new FileManagerSaveException(error);
         }
        }
 
 
-    public static FileBackedTaskManager loadFromFile(File file) throws FileManagerFileRecoveryException {
+    public static FileBackedTaskManager loadFromFile(File file) throws FileManagerRecoveryException {
         try {
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
             List<String> allFileContent = Files.readAllLines(file.toPath());
@@ -162,7 +162,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException e) {
             String error = "Ошибка при восстановлении файла" + e.getMessage();
             System.out.println(error);
-            throw new FileManagerFileRecoveryException(error);
+            throw new FileManagerRecoveryException(error);
         }
     }
 
