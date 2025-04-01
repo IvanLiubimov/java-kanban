@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks;
-    private Map <Integer, Epic> epics;
-    private Map <Integer, Subtask> subtasks;
+    private Map<Integer, Epic> epics;
+    private Map<Integer, Subtask> subtasks;
     private int idCounter = 0;
     private HistoryManager historyManager;
 
@@ -37,9 +37,10 @@ public class InMemoryTaskManager implements TaskManager {
         return newTask;
 
     }
+
     @Override
     public boolean updateTask(Task task) {
-        if (tasks.containsKey(task.getId())){
+        if (tasks.containsKey(task.getId())) {
             Task existingTask = tasks.get(task.getId());
             existingTask.setName(task.getName());
             existingTask.setDescription(task.getDescription());
@@ -52,6 +53,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task deleteTaskById(Integer id) {
+        historyManager.removeNode(id);
         return tasks.remove(id);
     }
 
@@ -69,20 +71,20 @@ public class InMemoryTaskManager implements TaskManager {
         return tasks.get(id);
     }
 
-
-
-
-
     @Override
     public void deleteAllTasks() {
+        for (Integer taskId : tasks.keySet()) {
+            historyManager.removeNode(taskId);
+        }
         tasks.clear();
     }
 //////////////////////////
+
 @Override
 public Epic createEpic(Epic newEpic) {
         int newId = idGenerator();
         newEpic.setId(newId);
-        epics.put (newEpic.getId(), newEpic);
+        epics.put(newEpic.getId(), newEpic);
         return newEpic;
 
     }
@@ -91,11 +93,13 @@ public Epic createEpic(Epic newEpic) {
     public Epic deleteEpicById(Integer id) { // 1) есть ли айди 2) залезай в талицу сабтасков и удаляй сабтаски
         if (epics.containsKey(id)) {
             Epic existingEpic = epics.get(id);
-            ArrayList <Subtask> epicSubtasks = existingEpic.getSubtasks();
+            ArrayList<Subtask> epicSubtasks = existingEpic.getSubtasks();
             for (Subtask subtask : epicSubtasks) {
                 Integer idToDelete = subtask.getId();
+                historyManager.removeNode(idToDelete);
                 subtasks.remove(idToDelete);
-            }
+                }
+            historyManager.removeNode(id);
             return epics.remove(id);
         }
         return null;
@@ -123,12 +127,22 @@ public Epic createEpic(Epic newEpic) {
     public Epic findEpicById(Integer id) {
         Epic epic = epics.get(id);
         Task seenEpic = new Epic(epic.getName(), epic.getDescription());
+        seenEpic.setId(epic.getId());
+        seenEpic.setStatus(epic.getStatus());
         historyManager.addToSeenTasks(seenEpic);
         return epics.get(id);
     }
 
     @Override
     public void deleteAllEpics() {
+        for (Integer subtaskId : subtasks.keySet()) {
+            historyManager.removeNode(subtaskId);
+        }
+        for (Integer epicId : epics.keySet()) {
+            historyManager.removeNode(epicId);
+        }
+
+
         subtasks.clear();
         epics.clear();
     }
@@ -153,7 +167,8 @@ public Subtask createSubtask(Subtask newSubtask) {
             Epic existingEpic = epics.get(newSubtask.getEpicId());
             existingEpic.addSubtask(newSubtask); //добавляем сабтаск в лист эпика
             existingEpic.updateStatusByTasks();
-            return subtasks.put(newId, newSubtask);
+            subtasks.put(newSubtask.getId(), newSubtask);
+            return newSubtask;
         }
         return null;
     }
@@ -179,6 +194,7 @@ public Subtask createSubtask(Subtask newSubtask) {
         Subtask subtask = subtasks.get(id);
         if (epics.containsKey(subtask.getEpicId())) {
             subtasks.remove(id);
+            historyManager.removeNode(id);
             Epic epic = epics.get(subtask.getEpicId());
             epic.deleteSubtask(subtask);
             epic.updateStatusByTasks();
@@ -189,6 +205,9 @@ public Subtask createSubtask(Subtask newSubtask) {
 
     @Override
     public ArrayList<Subtask> getAllSubtasks() {
+        for (Integer subtaskId : subtasks.keySet()) {
+            historyManager.removeNode(subtaskId);
+        }
         return new ArrayList<>(subtasks.values());
 
     }
@@ -197,6 +216,9 @@ public Subtask createSubtask(Subtask newSubtask) {
     public void deteteAllSubtusks() {
         subtasks.clear();
         for (Epic epic : epics.values()) {
+            for (Integer subtaskId : subtasks.keySet()) {
+                historyManager.removeNode(subtaskId);
+            }
             epic.deleteAllSubtasks();
             epic.updateStatusByTasks();
         }
@@ -210,8 +232,8 @@ public Subtask createSubtask(Subtask newSubtask) {
         return subtasks.get(id);
     }
 
-    private int idGenerator(){
-        return idCounter++;
+    private int idGenerator() {
+        return idCounter = idCounter + 1;
     }
 
     public boolean isIdConflict(int id) {
