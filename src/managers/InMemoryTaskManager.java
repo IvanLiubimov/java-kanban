@@ -1,11 +1,9 @@
 package managers;
-
 import task.Epic;
 import task.Subtask;
 import task.Task;
-
 import java.util.*;
-import java.util.function.Predicate;
+
 
 public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks;
@@ -19,8 +17,6 @@ public class InMemoryTaskManager implements TaskManager {
         return (int) (t1 - t2);
     };
     protected TreeSet <Task> prioritizedTasks = new TreeSet<>(taskComparator);
-
-
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
@@ -298,7 +294,7 @@ public Subtask createSubtask(Subtask newSubtask) {
     ArrayList<Task> allTasks = new ArrayList<>();
     allTasks.addAll(tasks.values());
     allTasks.addAll(subtasks.values());
-    if (allTasks.stream().anyMatch(task -> isTimeInConflict(task, newTask))){
+    if (allTasks.stream().anyMatch(task -> isTimeInConflict(task, newTask))) {
         return true;
     }
         return false;
