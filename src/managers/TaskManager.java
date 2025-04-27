@@ -3,12 +3,8 @@ package managers;
 import task.Epic;
 import task.Subtask;
 import task.Task;
-
-import java.time.Instant;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-
 public interface TaskManager {
 
     List<Task> getHistory();
@@ -60,5 +56,5 @@ public interface TaskManager {
 
     boolean isTimeInConflict(Task t1, Task t2);
 
-    boolean isTaskTimeInConflict (Task task);
+    boolean isTaskTimeInConflict(Task task);
 }
