@@ -4,9 +4,8 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks;
@@ -14,6 +13,12 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Subtask> subtasks;
     protected int idCounter = 0;
     private HistoryManager historyManager;
+    private Comparator<Task> taskComparator = (o1, o2) -> {
+        long t1 = o1.getStartTime().toEpochMilli();
+        long t2 = o2.getStartTime().toEpochMilli();
+        return (int) (t1 - t2);
+    };
+    protected TreeSet <Task> prioritizedTasks = new TreeSet<>(taskComparator);
 
 
 
@@ -39,10 +44,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task createTask(Task newTask) {
-        int newId = idGenerator();
-        newTask.setId(newId);
-        tasks.put(newTask.getId(), newTask);
-        return newTask;
+
+        boolean hasInteractions = isTaskTimeInConflict(newTask);
+        if (hasInteractions) {
+            throw new IllegalArgumentException("Нельзя создать задачу: время выполнения пересекается с другой задачей");
+        } else {
+            int newId = idGenerator();
+
+            newTask.setId(newId);
+            tasks.put(newTask.getId(), newTask);
+            return newTask;
+        }
 
     }
 
@@ -74,7 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task findTaskById(Integer id) {
         Task task = tasks.get(id);
-        Task seenTask = new Task(task.getName(), task.getDescription(), task.getStatus());
+        Task seenTask = new Task(task.getName(), task.getDescription(), task.getStatus(), task.getDuration(), task.getStartTime());
         historyManager.addToSeenTasks(seenTask);
         return tasks.get(id);
     }
@@ -168,18 +180,24 @@ public Epic createEpic(Epic newEpic) {
 ///////////////////////
 @Override
 public Subtask createSubtask(Subtask newSubtask) {
-        int newId = idGenerator();
-
+    int newId = idGenerator();
+    boolean hasInteractions = isTaskTimeInConflict(newSubtask);
+    if (hasInteractions) {
+        throw new IllegalArgumentException("Нельзя создать задачу: время выполнения пересекается с другой задачей");
+    } else {
         if (epics.containsKey(newSubtask.getEpicId())) {
             newSubtask.setId(newId);//
             Epic existingEpic = epics.get(newSubtask.getEpicId());
             existingEpic.addSubtask(newSubtask); //добавляем сабтаск в лист эпика
             existingEpic.updateStatusByTasks();
+            existingEpic.updateStartTimeByTasks();
+            existingEpic.updateDurationByTasks();
             subtasks.put(newSubtask.getId(), newSubtask);
             return newSubtask;
         }
         return null;
     }
+}
 
     @Override
     public boolean updateSubtask(Subtask subtask) {
@@ -191,6 +209,8 @@ public Subtask createSubtask(Subtask newSubtask) {
                 existingEpic.addSubtask(subtask);
                 subtasks.put(subtask.getId(), subtask);
                 existingEpic.updateStatusByTasks();
+                existingEpic.updateStartTimeByTasks();
+                existingEpic.updateDurationByTasks();
             }
             return true;
         }
@@ -206,6 +226,8 @@ public Subtask createSubtask(Subtask newSubtask) {
             Epic epic = epics.get(subtask.getEpicId());
             epic.deleteSubtask(subtask);
             epic.updateStatusByTasks();
+            epic.updateStartTimeByTasks();
+            epic.updateDurationByTasks();
         }
         }
 
@@ -232,7 +254,8 @@ public Subtask createSubtask(Subtask newSubtask) {
     @Override
     public Subtask findSubtaskById(Integer id) {
         Subtask subtask = subtasks.get(id);
-        Subtask seenSubtask = new Subtask(subtask.getName(), subtask.getDescription(),subtask.getStatus(), subtask.getEpicId());
+        Subtask seenSubtask = new Subtask(subtask.getName(), subtask.getDescription(),subtask.getStatus(),
+                subtask.getDuration(), subtask.getStartTime(),subtask.getEpicId());
         historyManager.addToSeenTasks(seenSubtask);
         return subtasks.get(id);
     }
@@ -245,4 +268,40 @@ public Subtask createSubtask(Subtask newSubtask) {
         return tasks.containsKey(id);
     }
 
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+    prioritizedTasks.clear();
+    try {
+        prioritizedTasks.addAll(tasks.values());
+        prioritizedTasks.addAll(subtasks.values());
+        return prioritizedTasks;
+    } catch (NullPointerException e) {
+        System.out.println("У одного или нескольких эпиков нет подзадач. Добавьте подзадачи и их начальное и продолжительность");
+        return Collections.emptySet();
+    }
+    }
+
+    @Override
+    public boolean isTimeInConflict(Task t1, Task t2) {
+        long startT1 = t1.getStartTime().toEpochMilli();
+        long startT2 = t2.getStartTime().toEpochMilli();
+        long endT1 = t1.getEndTime().toEpochMilli();
+        long endT2 = t2.getEndTime().toEpochMilli();
+        if ((startT1 <= startT2 && endT1 <= startT2) || (startT1 >= endT2 && endT1 >= endT2)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isTaskTimeInConflict(Task newTask) {
+    ArrayList<Task> allTasks = new ArrayList<>();
+    allTasks.addAll(tasks.values());
+    allTasks.addAll(subtasks.values());
+    if (allTasks.stream().anyMatch(task -> isTimeInConflict(task, newTask))){
+        return true;
+    }
+        return false;
+    }
 }
+

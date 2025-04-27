@@ -8,11 +8,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     File data;
+
+    public File getData() {
+        return data;
+    }
 
     public FileBackedTaskManager(File data) {
         this.data = data;
@@ -111,7 +117,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (FileWriter fileWriter = new FileWriter(data)) {
-            fileWriter.write("id,type,name,status,description,epicId");
+            fileWriter.write("id,type,name,status,description,duration, startTime,endTime,epicId");
             fileWriter.write(System.lineSeparator());
 
            for (Task task : tasks.values()) {
@@ -174,10 +180,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = partsOfLine[2];
         String description = partsOfLine[3];
         Status status = Status.valueOf(partsOfLine[4]);
-        int epicId = Integer.parseInt(partsOfLine[5]);
+        Duration duration = Duration.parse(partsOfLine[5]);
+        Instant startTime = Instant.parse(partsOfLine[6]);
         switch (type) {
             case TASK:
-                Task task = new Task(name, description, status);
+                Task task = new Task(name, description, status, duration, startTime);
                 task.setId(id);
                 return task;
             case EPIC:
@@ -185,7 +192,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epic.setId(id);
                 return epic;
             case SUBTASK:
-                Subtask subtask = new Subtask(name, description, status, epicId);
+                int epicId = Integer.parseInt(partsOfLine[7]);
+                Subtask subtask = new Subtask(name, description, status, duration, startTime, epicId);
                 subtask.setId(id);
                 return subtask;
         }
