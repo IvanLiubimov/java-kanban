@@ -65,7 +65,7 @@ public class Epic extends Task {
         }
     }
 
-    public void updateStartTimeByTasks () {
+    public void updateStartTimeByTasks() {
             long newStartTime = subtasks.stream()
                     .mapToLong(subtask -> subtask.getStartTime().toEpochMilli())
                     .min()
