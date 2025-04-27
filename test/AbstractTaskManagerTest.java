@@ -166,9 +166,8 @@ abstract class AbstractTaskManagerTest <M extends TaskManager> {
         Task createdTask = taskManager.createTask(task);
         Task createdTask1 = taskManager.createTask(task1);
         createdTask1.setId(createdTask.getId());
-        taskManager.createTask(task);
-        assertTrue(taskManager.isIdConflict(task1.getId()));
 
+        assertTrue(taskManager.isIdConflict(task1.getId()));
     }
 
     @Test
