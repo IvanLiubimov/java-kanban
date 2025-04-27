@@ -16,7 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
         long t2 = o2.getStartTime().toEpochMilli();
         return (int) (t1 - t2);
     };
-    protected TreeSet <Task> prioritizedTasks = new TreeSet<>(taskComparator);
+    protected TreeSet<Task> prioritizedTasks = new TreeSet<>(taskComparator);
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
