@@ -55,7 +55,4 @@ public interface TaskManager {
 
     Set<Task> getPrioritizedTasks();
 
-    boolean isTimeInConflict(Task t1, Task t2);
-
-    boolean isTaskTimeInConflict(Task task);
 }

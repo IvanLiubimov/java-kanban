@@ -5,10 +5,12 @@ import exceptions.EpicNoSubtasksException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
+    Instant endTime;
 
 
     @Override
@@ -59,6 +61,7 @@ public class Epic extends Task {
             Duration epicDuration = Duration.ofMillis(totalDuration);
             this.setDuration(epicDuration);
         } catch (EpicNoSubtasksException e) {
+            setDuration(Duration.ZERO);
             String error = "У эпика еще нет подзадач" + e.getMessage();
             System.out.println(error);
             throw new EpicNoSubtasksException(error);
@@ -66,33 +69,56 @@ public class Epic extends Task {
     }
 
     public void updateStartTimeByTasks() {
-            long newStartTime = subtasks.stream()
+        List<Subtask> SubtasksWithTime = subtasks.stream()
+                .filter(subtask -> subtask.getStartTime() != null)
+                .toList();
+        boolean isEpicHasTime = !SubtasksWithTime.isEmpty();
+        if (isEpicHasTime) {
+            long newStartTime = SubtasksWithTime.stream()
                     .mapToLong(subtask -> subtask.getStartTime().toEpochMilli())
+
                     .min()
                     .orElseThrow(() -> new EpicNoSubtasksException("У эпика еще нет подзадач"));
+
             Instant epicStartTime = Instant.ofEpochMilli(newStartTime);
             this.setStartTime(epicStartTime);
+        } else {
+            this.setStartTime(null);
+        }
     }
 
     @Override
     public Instant getEndTime() {
-        long newEndTime = subtasks.stream()
-                .mapToLong(subtask -> subtask.getEndTime().toEpochMilli())
-                .max()
-                .orElseThrow(() -> new EpicNoSubtasksException("У эпика еще нет подзадач"));
-        return Instant.ofEpochMilli(newEndTime);
+        return endTime;
+    }
+
+    public Instant calcullateEndTime() {
+        List<Subtask> SubtasksWithTime = subtasks.stream()
+                .filter(subtask -> subtask.getStartTime() != null)
+                .toList();
+        boolean isEpicHasTime = !SubtasksWithTime.isEmpty();
+        if (isEpicHasTime) {
+            long newEndTime = SubtasksWithTime.stream()
+                    .mapToLong(subtask -> subtask.getEndTime().toEpochMilli())
+                    .max()
+                    .orElseThrow(() -> new EpicNoSubtasksException("У эпика еще нет подзадач"));
+            return Instant.ofEpochMilli(newEndTime);
+        } return endTime = null;
     }
 
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
+        calcullateEndTime();
     }
 
     public void deleteSubtask(Subtask subtask) {
         subtasks.remove(subtask);
+        calcullateEndTime();
     }
 
     public void deleteAllSubtasks() {
         subtasks.clear();
+        calcullateEndTime();
     }
 
     @Override

@@ -35,7 +35,10 @@ public class Task {
     }
 
     public Instant getEndTime() {
-        return startTime.plus(duration);
+        if (startTime != null) {
+            return startTime.plus(duration);
+        }
+        return null;
     }
 
     public void setStatus(Status status) {
