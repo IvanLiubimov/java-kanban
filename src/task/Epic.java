@@ -101,7 +101,8 @@ public class Epic extends Task {
                     .max()
                     .orElseThrow(() -> new EpicNoSubtasksException("У эпика еще нет подзадач"));
             return Instant.ofEpochMilli(newEndTime);
-        } return endTime = null;
+        }
+        return endTime = null;
     }
 
     public void addSubtask(Subtask subtask) {
