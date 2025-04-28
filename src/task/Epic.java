@@ -100,7 +100,7 @@ public class Epic extends Task {
                     .mapToLong(subtask -> subtask.getEndTime().toEpochMilli())
                     .max()
                     .orElseThrow(() -> new EpicNoSubtasksException("У эпика еще нет подзадач"));
-            return Instant.ofEpochMilli(newEndTime);
+            return endTime = Instant.ofEpochMilli(newEndTime);
         }
         return endTime = null;
     }

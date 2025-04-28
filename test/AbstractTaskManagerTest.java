@@ -243,35 +243,38 @@ abstract class AbstractTaskManagerTest <M extends TaskManager> {
     }
 
     @Test
-    void epicDurationUpdateTest (){
+    void epicDurationUpdateTest() {
         String name1 = "1";
         String description1 = "2";
-        Epic epic = new Epic (name1, description1);
+        Epic epic = new Epic(name1, description1);
         taskManager.createEpic(epic);
 
         String name2 = "3";
         String description2 = "4";
         Duration duration2 = Duration.ofMinutes(7);
         Instant startTime2 = timeConverter("01.01.2025 16:00");
-        Subtask subtask = new Subtask (name2, description2, Status.NEW, duration2, startTime2, epic.getId());
+        Subtask subtask = new Subtask(name2, description2, Status.NEW, duration2, startTime2, epic.getId());
         taskManager.createSubtask(subtask);
 
         String name3 = "5";
         String description3 = "6";
         Duration duration3 = Duration.ofMinutes(2);
         Instant startTime3 = timeConverter("01.01.2025 15:38");
-        Subtask subtask1 = new Subtask (name3, description3, Status.NEW, duration3, startTime3, epic.getId());
+        Subtask subtask1 = new Subtask(name3, description3, Status.NEW, duration3, startTime3, epic.getId());
         taskManager.createSubtask(subtask1);
 
-        epic.updateDurationByTasks();
-        epic.updateStartTimeByTasks();
+        Epic epic1 = taskManager.findEpicById(epic.getId());
 
-        System.out.println(LocalDateTime.ofInstant(epic.getStartTime(), ZoneId.systemDefault()));
-        System.out.println(epic.getDuration().toMinutes());
+        epic1.updateDurationByTasks();
+        epic1.updateStartTimeByTasks();
+        epic1.calcullateEndTime();
 
-        Assertions.assertEquals(epic.getStartTime(), subtask1.getStartTime());
-        Assertions.assertEquals(epic.getDuration(), subtask.getDuration().plus(subtask1.getDuration()));
-        Assertions.assertEquals(epic.getEndTime(), subtask.getEndTime());
+        System.out.println(LocalDateTime.ofInstant(epic1.getStartTime(), ZoneId.systemDefault()));
+        System.out.println(epic1.getDuration().toMinutes());
+
+        Assertions.assertEquals(startTime3, epic1.getStartTime());
+        Assertions.assertEquals(duration2.plus(duration3), epic1.getDuration());
+        Assertions.assertEquals(startTime2.plus(duration2), epic1.getEndTime());
     }
 
     @Test
