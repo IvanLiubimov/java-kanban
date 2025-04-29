@@ -267,7 +267,7 @@ abstract class AbstractTaskManagerTest <M extends TaskManager> {
 
         epic1.updateDurationByTasks();
         epic1.updateStartTimeByTasks();
-        epic1.calcullateEndTime();
+        epic1.calculateEndTime();
 
         System.out.println(LocalDateTime.ofInstant(epic1.getStartTime(), ZoneId.systemDefault()));
         System.out.println(epic1.getDuration().toMinutes());
@@ -312,6 +312,38 @@ abstract class AbstractTaskManagerTest <M extends TaskManager> {
 
             System.out.println(taskManager.getPrioritizedTasks());
 
+
+    }
+    @Test
+    void epicDurationShouldBeNullIfSubtasksHaveNoTime() {
+        String name1 = "1";
+        String description1 = "2";
+        Epic epic = new Epic(name1, description1);
+        taskManager.createEpic(epic);
+
+        String name2 = "3";
+        String description2 = "4";
+        Duration duration2 = Duration.ofMinutes(0);
+        Instant startTime2 = timeConverter("01.01.2025 16:03");
+        Subtask subtask = new Subtask(name2, description2, Status.NEW, duration2, startTime2, epic.getId());
+        taskManager.createSubtask(subtask);
+        subtask.setStartTime(Instant.ofEpochMilli(0));
+
+        String name3 = "5";
+        String description3 = "6";
+        Duration duration3 = Duration.ofMinutes(0);
+        Instant startTime3 = timeConverter("01.01.2025 16:06");
+        Subtask subtask1 = new Subtask(name3, description3, Status.NEW, duration3, startTime3, epic.getId());
+        taskManager.createSubtask(subtask1);
+        subtask1.setStartTime(Instant.ofEpochMilli(0));
+
+        epic.updateDurationByTasks();
+        epic.updateStartTimeByTasks();
+        epic.calculateEndTime();
+
+        //assertNull(epic.getStartTime());
+        Assertions.assertEquals(Duration.ZERO, epic.getDuration());
+        //assertNull(epic.getEndTime());
 
     }
 

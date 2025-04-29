@@ -193,6 +193,7 @@ public Subtask createSubtask(Subtask newSubtask) {
             existingEpic.updateStatusByTasks();
             existingEpic.updateStartTimeByTasks();
             existingEpic.updateDurationByTasks();
+            existingEpic.calculateEndTime();
             subtasks.put(newSubtask.getId(), newSubtask);
             return newSubtask;
         }
@@ -217,6 +218,7 @@ public Subtask createSubtask(Subtask newSubtask) {
                 existingEpic.updateStatusByTasks();
                 existingEpic.updateStartTimeByTasks();
                 existingEpic.updateDurationByTasks();
+                existingEpic.calculateEndTime();
             }
             return true;
         }
@@ -234,6 +236,7 @@ public Subtask createSubtask(Subtask newSubtask) {
             epic.updateStatusByTasks();
             epic.updateStartTimeByTasks();
             epic.updateDurationByTasks();
+            epic.calculateEndTime();
         }
         }
 
@@ -254,6 +257,9 @@ public Subtask createSubtask(Subtask newSubtask) {
             }
             epic.deleteAllSubtasks();
             epic.updateStatusByTasks();
+            epic.updateDurationByTasks();
+            epic.updateStartTimeByTasks();
+            epic.calculateEndTime();
         }
     }
 
@@ -277,7 +283,7 @@ public Subtask createSubtask(Subtask newSubtask) {
     @Override
     public Set<Task> getPrioritizedTasks() {
     prioritizedTasks.clear();
-    try {
+
         prioritizedTasks.addAll(tasks.values().stream()
                 .filter(tasksWithStartTime -> tasksWithStartTime.getStartTime() != null)
                 .filter(tasksWithDuration -> tasksWithDuration.getDuration() != null)
@@ -287,11 +293,8 @@ public Subtask createSubtask(Subtask newSubtask) {
                 .filter(tasksWithDuration -> tasksWithDuration.getDuration() != null)
                 .toList());
         return prioritizedTasks;
-    } catch (NullPointerException e) {
-        System.out.println("У одного или нескольких эпиков нет подзадач. Добавьте подзадачи и их начальное и продолжительность");
-        return Collections.emptySet();
     }
-    }
+
 
     private boolean isTimeInConflict(Task t1, Task t2) {
         long startT1 = t1.getStartTime().toEpochMilli();

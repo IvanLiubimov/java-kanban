@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
-    Instant endTime;
+    private Instant endTime;
 
 
     @Override
@@ -54,18 +54,11 @@ public class Epic extends Task {
     }
 
     public void updateDurationByTasks() {
-        try {
             long totalDuration = subtasks.stream()
                     .mapToLong(subtask -> subtask.getDuration().toMillis())
                     .sum();
             Duration epicDuration = Duration.ofMillis(totalDuration);
             this.setDuration(epicDuration);
-        } catch (EpicNoSubtasksException e) {
-            setDuration(Duration.ZERO);
-            String error = "У эпика еще нет подзадач" + e.getMessage();
-            System.out.println(error);
-            throw new EpicNoSubtasksException(error);
-        }
     }
 
     public void updateStartTimeByTasks() {
@@ -77,7 +70,7 @@ public class Epic extends Task {
             long newStartTime = subtasksWithTime.stream()
                     .mapToLong(subtask -> subtask.getStartTime().toEpochMilli())
                     .min()
-                    .orElseThrow(() -> new EpicNoSubtasksException("У эпика еще нет подзадач"));
+                    .getAsLong();
             Instant epicStartTime = Instant.ofEpochMilli(newStartTime);
             this.setStartTime(epicStartTime);
         } else {
@@ -90,7 +83,7 @@ public class Epic extends Task {
         return endTime;
     }
 
-    public Instant calcullateEndTime() {
+    public void calculateEndTime() {
         List<Subtask> subtasksWithTime = subtasks.stream()
                 .filter(subtask -> subtask.getStartTime() != null)
                 .toList();
@@ -99,25 +92,24 @@ public class Epic extends Task {
             long newEndTime = subtasksWithTime.stream()
                     .mapToLong(subtask -> subtask.getEndTime().toEpochMilli())
                     .max()
-                    .orElseThrow(() -> new EpicNoSubtasksException("У эпика еще нет подзадач"));
-            return endTime = Instant.ofEpochMilli(newEndTime);
+                    .getAsLong();
+            this.endTime = Instant.ofEpochMilli(newEndTime);
+        } else {
+            endTime = null;
         }
-        return endTime = null;
+
     }
 
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
-        calcullateEndTime();
     }
 
     public void deleteSubtask(Subtask subtask) {
         subtasks.remove(subtask);
-        calcullateEndTime();
     }
 
     public void deleteAllSubtasks() {
         subtasks.clear();
-        calcullateEndTime();
     }
 
     @Override
