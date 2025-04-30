@@ -3,8 +3,8 @@ package managers;
 import task.Epic;
 import task.Subtask;
 import task.Task;
-
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -52,4 +52,7 @@ public interface TaskManager {
     Subtask findSubtaskById(Integer id);
 
     public boolean isIdConflict(int id);
+
+    Set<Task> getPrioritizedTasks();
+
 }

@@ -1,10 +1,15 @@
 package task;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
+    private Instant endTime;
+
 
     @Override
     public String toString() {
@@ -12,7 +17,7 @@ public class Epic extends Task {
     }
 
     public Epic(String name, String description) {
-        super(name, description, Status.NEW);
+        super(name, description, Status.NEW, Duration.ZERO, null);
         this.subtasks = new ArrayList<>();
     }
 
@@ -44,10 +49,54 @@ public class Epic extends Task {
             epicStatus = Status.NEW;
         }
        this.setStatus(epicStatus);
+    }
+
+    public void updateDurationByTasks() {
+            long totalDuration = subtasks.stream()
+                    .mapToLong(subtask -> subtask.getDuration().toMillis())
+                    .sum();
+            Duration epicDuration = Duration.ofMillis(totalDuration);
+            this.setDuration(epicDuration);
+    }
+
+    public void updateStartTimeByTasks() {
+        List<Subtask> subtasksWithTime = subtasks.stream()
+                .filter(subtask -> subtask.getStartTime() != null)
+                .toList();
+        boolean isEpicHasTime = !subtasksWithTime.isEmpty();
+        if (isEpicHasTime) {
+            long newStartTime = subtasksWithTime.stream()
+                    .mapToLong(subtask -> subtask.getStartTime().toEpochMilli())
+                    .min()
+                    .getAsLong();
+            Instant epicStartTime = Instant.ofEpochMilli(newStartTime);
+            this.setStartTime(epicStartTime);
+        } else {
+            this.setStartTime(null);
         }
-       // статус текущего эпика в зависимости от статуса списка подзадач
+    }
 
+    @Override
+    public Instant getEndTime() {
+        return endTime;
+    }
 
+    public void calculateEndTime() {
+        List<Subtask> subtasksWithTime = subtasks.stream()
+                .filter(subtask -> subtask.getStartTime() != null)
+                .toList();
+        boolean isEpicHasTime = !subtasksWithTime.isEmpty();
+        if (isEpicHasTime) {
+            long newEndTime = subtasksWithTime.stream()
+                    .mapToLong(subtask -> subtask.getEndTime().toEpochMilli())
+                    .max()
+                    .getAsLong();
+            this.endTime = Instant.ofEpochMilli(newEndTime);
+        } else {
+            endTime = null;
+        }
+
+    }
 
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
@@ -87,6 +136,8 @@ public class Epic extends Task {
         }
         return hash;
     }
+
+
 
 
 }
