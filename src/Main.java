@@ -1,14 +1,14 @@
-import exceptions.FileManagerRecoveryException;
-import managers.FileBackedTaskManager;
-import managers.InMemoryTaskManager;
-import managers.TaskManager;
+import Handlers.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sun.net.httpserver.HttpServer;
+import managers.*;
 import task.Epic;
 import task.Status;
 import task.Subtask;
-import task.Task;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -16,13 +16,56 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Main {
+    private static final int PORT = 8080;
 
-    public static void main(String[] args) throws IOException, FileManagerRecoveryException {
+    public static void main(String[] args) throws IOException {
 
-         File file = File.createTempFile("backup", ".csv");
+         InetSocketAddress address = new InetSocketAddress("127.0.0.1", 8080);
+         HttpServer server = HttpServer.create(address, 0);
+
+         TaskManager manager = Managers.getTaskManager();
+         String timeFromUser = "01.01.2025 14:00";
+         //Task task = new Task("Сделать ТЗ ", "Написать код", Status.NEW, Duration.ofMinutes(1), timeConverter(timeFromUser));
+
+         //String timeFromUser2 = "01.01.2025 14:50";
+         //Task task1 = new Task("Сделать ТЗ ", "Эндпоинты", Status.NEW, Duration.ofMinutes(4), timeConverter(timeFromUser2));
+
+        //manager.createTask(task);
+        //manager.createTask(task1);
+
+         Gson jsonMapper = new GsonBuilder()
+                 .registerTypeAdapter(Instant.class, new InstantAdapter())
+                 .registerTypeAdapter(Duration.class, new DurationAdapter())
+                 .create();
+         server.createContext("/tasks", new HttpTaskHandler(manager, jsonMapper));
+         server.createContext("/epics", new HttpEpicHandler(manager, jsonMapper));
+         server.createContext("/subtasks", new HttpSubtaskHandler(manager, jsonMapper));
+         //server.createContext("/history", new HttpTaskHandler(Managers.getTaskManager()));
+         //server.createContext("//prioritized", new HttpTaskHandler(Managers.getTaskManager()));
+
+         server.start();
+         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+
+        Epic epic1 = new Epic("", "");
+        manager.createEpic(epic1);
+
+        Duration duration = Duration.ofMinutes(50);
+        Subtask subtask = new Subtask("","",Status.NEW, duration, timeConverter(timeFromUser), epic1.getId());
+        manager.createSubtask(subtask);
+
+
+
+
+
+
+
+
+
+
+
+
+         /*File file = File.createTempFile("backup", ".csv");
          FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-
-
 
          TaskManager taskManager = new InMemoryTaskManager();
          String timeFromUser = "01.01.2025 14:00";
@@ -42,7 +85,7 @@ public class Main {
               System.out.println("задача обновлена");
          }
          System.out.println(taskManager.getAllTasks());
-         Epic epic1 = new Epic("", "");
+
          Epic newEpic1 = fileBackedTaskManager.createEpic(epic1);
          Integer createdEpicId = newEpic1.getId();
          Epic updatedEpic1 = new Epic("r","g");
@@ -56,11 +99,8 @@ public class Main {
          System.out.println(file);
 
          //File backup = new File("backup.csv");
-         //FileBackedTaskManager.loadFromFile(backup);
-         //System.out.println(backup);
-
-         fileBackedTaskManager.deleteTaskById(createdTaskId);
-         fileBackedTaskManager.deleteTaskById(createdTaskId);
+         FileBackedTaskManager.loadFromFile(file);
+         System.out.println(file); */
 
     }
 
