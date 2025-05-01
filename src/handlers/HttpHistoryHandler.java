@@ -1,4 +1,4 @@
-package Handlers;
+package handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-public class HttpHistoryHandler extends BaseHttpHandler{
+public class HttpHistoryHandler extends BaseHttpHandler {
 
     private TaskManager taskManager;
     private Gson jsonMapper;

@@ -1,4 +1,4 @@
-package Handlers;
+package handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Set;
 
-public class HttpPrioritizedHandler extends  BaseHttpHandler{
+public class HttpPrioritizedHandler extends  BaseHttpHandler {
     private TaskManager taskManager;
     private Gson jsonMapper;
 
