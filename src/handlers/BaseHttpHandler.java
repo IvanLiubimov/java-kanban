@@ -30,14 +30,13 @@ public abstract class BaseHttpHandler implements HttpHandler {
         h.close();
     }
 
-    protected void sendHasInteractions (HttpExchange h, String text, Integer code) throws IOException {
+    protected void sendHasInteractions(HttpExchange h, String text, Integer code) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         h.sendResponseHeaders(code, resp.length);
         h.getResponseBody().write(resp);
         h.close();
     }
-
 
     protected static Instant timeConverter(String startTimeFromUser) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
@@ -46,7 +45,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
                 .toInstant();
     }
 
-    protected Status statusReader (String status) {
+    protected Status statusReader(String status) {
         return switch (status) {
             case "NEW" -> Status.NEW;
             case "DONE" -> Status.DONE;
