@@ -24,14 +24,7 @@ public class Main {
          HttpServer server = HttpServer.create(address, 0);
 
          TaskManager manager = Managers.getTaskManager();
-         String timeFromUser = "01.01.2025 14:00";
-         //Task task = new Task("Сделать ТЗ ", "Написать код", Status.NEW, Duration.ofMinutes(1), timeConverter(timeFromUser));
 
-         //String timeFromUser2 = "01.01.2025 14:50";
-         //Task task1 = new Task("Сделать ТЗ ", "Эндпоинты", Status.NEW, Duration.ofMinutes(4), timeConverter(timeFromUser2));
-
-        //manager.createTask(task);
-        //manager.createTask(task1);
 
          Gson jsonMapper = new GsonBuilder()
                  .registerTypeAdapter(Instant.class, new InstantAdapter())
@@ -40,29 +33,32 @@ public class Main {
          server.createContext("/tasks", new HttpTaskHandler(manager, jsonMapper));
          server.createContext("/epics", new HttpEpicHandler(manager, jsonMapper));
          server.createContext("/subtasks", new HttpSubtaskHandler(manager, jsonMapper));
-         //server.createContext("/history", new HttpTaskHandler(Managers.getTaskManager()));
-         //server.createContext("//prioritized", new HttpTaskHandler(Managers.getTaskManager()));
+         server.createContext("/history", new HttpHistoryHandler(manager, jsonMapper));
+         server.createContext("//prioritized", new HttpPrioritizedHandler(manager, jsonMapper));
 
          server.start();
          System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
 
-        Epic epic1 = new Epic("", "");
-        manager.createEpic(epic1);
-
-        Duration duration = Duration.ofMinutes(50);
-        Subtask subtask = new Subtask("","",Status.NEW, duration, timeConverter(timeFromUser), epic1.getId());
-        manager.createSubtask(subtask);
 
 
 
 
 
 
+        //Epic epic1 = new Epic("", "");
+        //manager.createEpic(epic1);
 
+        // Duration duration = Duration.ofMinutes(50);
+        //Subtask subtask = new Subtask("","",Status.NEW, duration, timeConverter(timeFromUser), epic1.getId());
+        // manager.createSubtask(subtask);
+        //String timeFromUser = "01.01.2025 14:00";
+        //Task task = new Task("Сделать ТЗ ", "Написать код", Status.NEW, Duration.ofMinutes(1), timeConverter(timeFromUser));
 
+        //String timeFromUser2 = "01.01.2025 14:50";
+        //Task task1 = new Task("Сделать ТЗ ", "Эндпоинты", Status.NEW, Duration.ofMinutes(4), timeConverter(timeFromUser2));
 
-
-
+        //manager.createTask(task);
+        //manager.createTask(task1);
 
          /*File file = File.createTempFile("backup", ".csv");
          FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
