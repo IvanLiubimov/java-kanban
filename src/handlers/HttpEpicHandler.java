@@ -91,13 +91,15 @@ public class HttpEpicHandler extends BaseHttpHandler {
             String json = jsonMapper.toJson(allEpic);
             System.out.println(json);
             sendText(exchange, json, 200);
-        } if (pathParts.length == 3) {
+        }
+        if (pathParts.length == 3) {
             Integer id = Integer.valueOf(pathParts[2]);
             Epic epicById = taskManager.findEpicById(id);
             String json = jsonMapper.toJson(epicById);
             System.out.println(json);
             sendText(exchange, json, 200);
-        } if (pathParts.length == 4) {
+        }
+        if (pathParts.length == 4) {
             int id = Integer.parseInt(pathParts[2]);
             List<Subtask> epicSubtasks = taskManager.getSubtaskByEpic(id);
             String json = jsonMapper.toJson(epicSubtasks);

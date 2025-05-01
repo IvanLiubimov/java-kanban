@@ -99,7 +99,8 @@ public class HttpTaskHandler extends BaseHttpHandler {
             sendText(exchange, "Эадача_создана_:" + jsonText, 201);
             //Сделать ТЗ/Написать код/3/01.01.2025 14:00
 
-        }  if (pathParts.length == 7) {
+        }
+        if (pathParts.length == 7) {
             int id = Integer.parseInt(pathParts[2]);
             Instant startTime = timeConverter(pathParts[6]);
             Task task = new Task(pathParts[3], pathParts[4], status, Duration.ofMinutes(Integer.parseInt(pathParts[5])),
