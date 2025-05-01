@@ -90,7 +90,8 @@ public class HttpSubtaskHandler extends BaseHttpHandler {
             String jsonText = jsonMapper.toJson(subtask.toString());
             sendText(exchange, "Подзадача_создана_:" + jsonText, 201);
             //ТЗ 9/Эндпоинты/3/01.01.2025 14:05/1
-        } if (pathParts.length == 9) {
+        }
+        if (pathParts.length == 9) {
             int id = Integer.parseInt(pathParts[2]);
             Status status = statusReader(pathParts[5]);
             Instant startTime = timeConverter(pathParts[6]);
@@ -117,7 +118,8 @@ public class HttpSubtaskHandler extends BaseHttpHandler {
             String json = jsonMapper.toJson(allSubtasks);
             System.out.println(json);
             sendText(exchange, json, 200);
-        } if (pathParts.length == 3) {
+        }
+        if (pathParts.length == 3) {
             Integer id = Integer.valueOf(pathParts[2]);
             Subtask subtaskById = taskManager.findSubtaskById(id);
             String json = jsonMapper.toJson(subtaskById);
