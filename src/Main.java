@@ -3,6 +3,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import managers.*;
+import server.TaskServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,28 +14,15 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Main {
-    private static final int PORT = 8080;
 
     public static void main(String[] args) throws IOException {
 
-         InetSocketAddress address = new InetSocketAddress("127.0.0.1", 8080);
-         HttpServer server = HttpServer.create(address, 0);
+        TaskManager taskManager = new InMemoryTaskManager();
+        TaskServer taskServer = new TaskServer(taskManager);
 
-         TaskManager manager = Managers.getTaskManager();
+        taskServer.start();
 
-
-         Gson jsonMapper = new GsonBuilder()
-                 .registerTypeAdapter(Instant.class, new InstantAdapter())
-                 .registerTypeAdapter(Duration.class, new DurationAdapter())
-                 .create();
-         server.createContext("/tasks", new HttpTaskHandler(manager, jsonMapper));
-         server.createContext("/epics", new HttpEpicHandler(manager, jsonMapper));
-         server.createContext("/subtasks", new HttpSubtaskHandler(manager, jsonMapper));
-         server.createContext("/history", new HttpHistoryHandler(manager, jsonMapper));
-         server.createContext("//prioritized", new HttpPrioritizedHandler(manager, jsonMapper));
-
-         server.start();
-         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+        taskServer.stop(300);
 
 
 

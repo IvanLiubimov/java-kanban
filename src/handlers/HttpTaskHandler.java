@@ -97,8 +97,6 @@ public class HttpTaskHandler extends BaseHttpHandler {
             taskManager.createTask(task);
             String jsonText = jsonMapper.toJson(task.toString());
             sendText(exchange, "Эадача_создана_:" + jsonText, 201);
-            //Сделать ТЗ/Написать код/3/01.01.2025 14:00
-
         }
         if (pathParts.length == 7) {
             int id = Integer.parseInt(pathParts[2]);
@@ -109,7 +107,6 @@ public class HttpTaskHandler extends BaseHttpHandler {
             taskManager.updateTask(task);
             String jsonText = jsonMapper.toJson(task.toString());
             sendText(exchange, "задача_с_id_" + id + "_обновлена_:" + jsonText, 201);
-                //1/ТЗ 9/Эндпоинты/3/01.01.2025 14:05
         } else {
             throw new IllegalArgumentException("Неверный формат запроса");
         }

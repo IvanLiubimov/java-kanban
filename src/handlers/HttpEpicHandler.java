@@ -75,7 +75,6 @@ public class HttpEpicHandler extends BaseHttpHandler {
             taskManager.createEpic(epic);
             String jsonText = jsonMapper.toJson(epic.toString());
             sendText(exchange, "Эпик_создан_:" + jsonText, 201);
-            //Сделать ТЗ/Написать код/3/01.01.2025 14:00
         } else {
             throw new IllegalArgumentException("Неверный формат запроса");
         }

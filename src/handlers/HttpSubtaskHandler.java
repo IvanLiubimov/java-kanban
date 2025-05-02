@@ -89,7 +89,6 @@ public class HttpSubtaskHandler extends BaseHttpHandler {
             taskManager.createSubtask(subtask);
             String jsonText = jsonMapper.toJson(subtask.toString());
             sendText(exchange, "Подзадача_создана_:" + jsonText, 201);
-            //ТЗ 9/Эндпоинты/3/01.01.2025 14:05/1
         }
         if (pathParts.length == 9) {
             int id = Integer.parseInt(pathParts[2]);
@@ -102,7 +101,6 @@ public class HttpSubtaskHandler extends BaseHttpHandler {
             taskManager.updateTask(subtask);
             String jsonText = jsonMapper.toJson(subtask.toString());
             sendText(exchange, "Подзадача_с_id_" + id + "_обновлена_:" + jsonText, 201);
-            //3/ТЗ 9/Эндпоинты/3/01.01.2025 14:05/1
         } else {
             throw new IllegalArgumentException("Неверный формат запроса");
         }
