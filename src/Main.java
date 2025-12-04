@@ -1,15 +1,7 @@
-import exceptions.FileManagerRecoveryException;
-import managers.FileBackedTaskManager;
-import managers.InMemoryTaskManager;
-import managers.TaskManager;
-import task.Epic;
-import task.Status;
-import task.Subtask;
-import task.Task;
+import managers.*;
+import server.TaskServer;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,12 +9,38 @@ import java.time.format.DateTimeFormatter;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, FileManagerRecoveryException {
+    public static void main(String[] args) throws IOException {
 
-         File file = File.createTempFile("backup", ".csv");
+        TaskManager taskManager = new InMemoryTaskManager();
+        TaskServer taskServer = new TaskServer(taskManager);
+
+        taskServer.start();
+
+        taskServer.stop(300);
+
+
+
+
+
+
+
+        //Epic epic1 = new Epic("", "");
+        //manager.createEpic(epic1);
+
+        // Duration duration = Duration.ofMinutes(50);
+        //Subtask subtask = new Subtask("","",Status.NEW, duration, timeConverter(timeFromUser), epic1.getId());
+        // manager.createSubtask(subtask);
+        //String timeFromUser = "01.01.2025 14:00";
+        //Task task = new Task("Сделать ТЗ ", "Написать код", Status.NEW, Duration.ofMinutes(1), timeConverter(timeFromUser));
+
+        //String timeFromUser2 = "01.01.2025 14:50";
+        //Task task1 = new Task("Сделать ТЗ ", "Эндпоинты", Status.NEW, Duration.ofMinutes(4), timeConverter(timeFromUser2));
+
+        //manager.createTask(task);
+        //manager.createTask(task1);
+
+         /*File file = File.createTempFile("backup", ".csv");
          FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-
-
 
          TaskManager taskManager = new InMemoryTaskManager();
          String timeFromUser = "01.01.2025 14:00";
@@ -42,7 +60,7 @@ public class Main {
               System.out.println("задача обновлена");
          }
          System.out.println(taskManager.getAllTasks());
-         Epic epic1 = new Epic("", "");
+
          Epic newEpic1 = fileBackedTaskManager.createEpic(epic1);
          Integer createdEpicId = newEpic1.getId();
          Epic updatedEpic1 = new Epic("r","g");
@@ -56,11 +74,8 @@ public class Main {
          System.out.println(file);
 
          //File backup = new File("backup.csv");
-         //FileBackedTaskManager.loadFromFile(backup);
-         //System.out.println(backup);
-
-         fileBackedTaskManager.deleteTaskById(createdTaskId);
-         fileBackedTaskManager.deleteTaskById(createdTaskId);
+         FileBackedTaskManager.loadFromFile(file);
+         System.out.println(file); */
 
     }
 

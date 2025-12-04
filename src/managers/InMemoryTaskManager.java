@@ -1,4 +1,5 @@
 package managers;
+import exceptions.TaskNotFoundException;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -86,7 +87,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task findTaskById(Integer id) {
+
         Task task = tasks.get(id);
+        if (task == null) {
+            String error = String.format("задача с id %d не найдена", id);
+            throw new TaskNotFoundException(error);
+        }
         Task seenTask = new Task(task.getName(), task.getDescription(), task.getStatus(), task.getDuration(), task.getStartTime());
         historyManager.addToSeenTasks(seenTask);
         return tasks.get(id);
